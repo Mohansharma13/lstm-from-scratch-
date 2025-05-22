@@ -47,7 +47,7 @@ def parallel_scan(a, b, h0):
 def train_min_gru_parallel(X, Y, vocab_size, hidden_size=10, embedding_dim=8, epochs=500,verbose=True):
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
     min_gru = MinGRUCell(hidden_size, vocab_size)
-
+    losses = []
     # Embedding layer
     embedding_layer = tf.keras.layers.Embedding(input_dim=vocab_size, output_dim=embedding_dim, mask_zero=True)
 
@@ -71,12 +71,13 @@ def train_min_gru_parallel(X, Y, vocab_size, hidden_size=10, embedding_dim=8, ep
         # Update both minGRU and embedding layer
         grads = tape.gradient(loss, min_gru.trainable_variables + embedding_layer.trainable_variables)
         optimizer.apply_gradients(zip(grads, min_gru.trainable_variables + embedding_layer.trainable_variables))
+        losses.append(loss.numpy())
 
         if epoch % 10 == 0 and verbose:
             print(f"Epoch {epoch}, Loss: {loss.numpy():.4f}")
 
         if epoch == epochs - 1:
-            return min_gru, embedding_layer
+            return min_gru, embedding_layer, losses
 
 def predict_min_gru_parallel(model, tokenizer, input_text, embedding_layer, hidden_size):
     seq_length = 3
