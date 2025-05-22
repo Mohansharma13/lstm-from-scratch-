@@ -29,8 +29,8 @@ class TransformerModel(tf.keras.Model):
     def __init__(self, vocab_size, seq_length, embed_dim=32, num_heads=2, ff_dim=64):
         super().__init__()
         self.embedding = tf.keras.layers.Embedding(vocab_size, embed_dim, input_length=seq_length)
-        self.pos_encoding = self.add_weight("pos_encoding", shape=[1, seq_length, embed_dim],
-                                            initializer="random_normal", trainable=True)
+        # self.pos_encoding = self.add_weight("pos_encoding", shape=[1, seq_length, embed_dim],
+        #                                     initializer="random_normal", trainable=True)
         self.pos_encoding = self.add_weight(
             name="pos_encoding",
             shape=[1, seq_length, embed_dim],
