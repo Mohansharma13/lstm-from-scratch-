@@ -3,9 +3,6 @@ import numpy as np
 
 # ========== Standard GRU Model ==========
 
-x=100
-
-
 class StandardGRU(tf.keras.Model):
     def __init__(self, vocab_size, embedding_dim, hidden_size):
         super().__init__()
@@ -21,7 +18,7 @@ class StandardGRU(tf.keras.Model):
 
 # ========== Training Function ==========
 
-def train_gru_model(X, Y, vocab_size, embedding_dim=8, hidden_size=10, epochs=100):
+def train_gru_model(X, Y, vocab_size, embedding_dim=8, hidden_size=10, epochs=500,verbose=True):
     model = StandardGRU(vocab_size, embedding_dim, hidden_size)
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
 
@@ -33,7 +30,7 @@ def train_gru_model(X, Y, vocab_size, embedding_dim=8, hidden_size=10, epochs=10
         grads = tape.gradient(loss, model.trainable_variables)
         optimizer.apply_gradients(zip(grads, model.trainable_variables))
 
-        if epoch % 10 == 0:
+        if epoch % 10 == 0 and verbose:
             print(f"[GRU] Epoch {epoch}, Loss: {loss.numpy():.4f}")
 
     return model
